@@ -6,39 +6,33 @@ public:
     int maxPalindromes(string s, int k) {
         int n = s.size();
 
-        // pal[i][j] = true if s[i...j] is a palindrome
-        vector<vector<bool>> pal(n, vector<bool>(n, false));
+        // dp[i] = maximum number of valid non-overlapping palindromes
+        // that can be selected from the prefix s[0...i-1].
+        vector<int> dp(n + 1, 0);
 
-        // Build palindrome table
-        for (int len = 1; len <= n; len++) {
-            for (int i = 0; i + len <= n; i++) {
-                int j = i + len - 1;
-
-                if (s[i] == s[j] && (len <= 2 || pal[i + 1][j - 1])) {
-                    pal[i][j] = true;
+        // We'll discover palindromes by expanding around every center.
+        // This avoids storing the complete O(n^2) palindrome table.
+        for (int center = 0; center < n; center++) {
+            int l = center, r = center;
+            while (l >= 0 && r < n && s[l] == s[r]) {
+                int len = r - l + 1;
+                if (len >= k) {
+                    dp[r + 1] = max(dp[r + 1], dp[l] + 1);
                 }
+                --l;
+                ++r;
             }
         }
 
-        // dp[i] = maximum number of non-overlapping palindromes
-        // using the first i characters
-        vector<int> dp(n + 1, 0);
-
+        // Even when no palindrome ends at i-1, we can skip that character.
         for (int i = 1; i <= n; i++) {
-            // Don't use character i-1
-            dp[i] = dp[i - 1];
-
-            // Try every substring ending at i-1
-            for (int j = 0; j < i; j++) {
-                if (i - j >= k && pal[j][i - 1]) {
-                    dp[i] = max(dp[i], dp[j] + 1);
-                }
-            }
+            dp[i] = max(dp[i], dp[i - 1]);
         }
 
         return dp[n];
     }
 };
 
-// Time Complexity: O(n^2)
-// Space Complexity: O(n^2)
+// Alternative approach: expand around each center.
+// Time Complexity: O(n^2) in the worst case.
+// Space Complexity: O(n).
