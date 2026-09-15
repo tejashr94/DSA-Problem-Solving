@@ -29,6 +29,8 @@ class Solution {
 public:
     int maxPalindromes(string s, int k) {
         int n = s.size();
+        if (n == 0 || k > n) return 0;
+
         vector<int> odd = oddPalindromes(s);
         vector<int> even = evenPalindromes(s);
         vector<int> dp(n + 1, 0);
