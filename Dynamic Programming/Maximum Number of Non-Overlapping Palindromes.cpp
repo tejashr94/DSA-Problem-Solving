@@ -8,7 +8,7 @@ class Solution {
         int n = s.size();
         vector<int> d1(n);
 
-        // d1[i] stores the radius of the longest odd palindrome centered at i.
+        // d1[i] = radius of the longest odd palindrome centered at i.
         for (int i = 0, l = 0, r = -1; i < n; ++i) {
             int k = (i > r) ? 1 : min(d1[l + r - i], r - i + 1);
             while (i - k >= 0 && i + k < n && s[i - k] == s[i + k]) ++k;
@@ -25,7 +25,7 @@ class Solution {
         int n = s.size();
         vector<int> d2(n);
 
-        // d2[i] stores the radius of the longest even palindrome centered before i.
+        // d2[i] = radius of the longest even palindrome centered before i.
         for (int i = 0, l = 0, r = -1; i < n; ++i) {
             int k = (i > r) ? 0 : min(d2[l + r - i + 1], r - i + 1);
             while (i - k - 1 >= 0 && i + k < n && s[i - k - 1] == s[i + k]) ++k;
@@ -47,7 +47,8 @@ public:
         vector<int> even = evenPalindromes(s);
         vector<int> dp(n + 1, 0);
 
-        // Process intervals by their right endpoint so dp[l] is finalized.
+        // dp[i] is the best answer for the prefix s[0...i-1].
+        // For every right endpoint, either skip it or finish a palindrome there.
         for (int r = 0; r < n; ++r) {
             dp[r + 1] = dp[r];
 
@@ -72,3 +73,7 @@ public:
         return dp[n];
     }
 };
+
+// Manacher preprocessing: O(n) time and O(n) space.
+// Prefix DP with interval checks: O(n^2) time and O(n) space.
+// Overall: O(n^2) time and O(n) auxiliary space.
