@@ -5,6 +5,8 @@ class Solution {
     vector<int> oddPalindromes(const string& s) {
         int n = s.size();
         vector<int> d1(n);
+
+        // d1[i] is the radius of the longest odd palindrome centered at i.
         for (int i = 0, l = 0, r = -1; i < n; ++i) {
             int k = (i > r) ? 1 : min(d1[l + r - i], r - i + 1);
             while (i - k >= 0 && i + k < n && s[i - k] == s[i + k]) ++k;
@@ -17,6 +19,8 @@ class Solution {
     vector<int> evenPalindromes(const string& s) {
         int n = s.size();
         vector<int> d2(n);
+
+        // d2[i] is the radius of the longest even palindrome ending around i.
         for (int i = 0, l = 0, r = -1; i < n; ++i) {
             int k = (i > r) ? 0 : min(d2[l + r - i + 1], r - i + 1);
             while (i - k - 1 >= 0 && i + k < n && s[i - k - 1] == s[i + k]) ++k;
@@ -40,6 +44,7 @@ public:
             for (int l = 0; l <= r; ++l) {
                 int len = r - l + 1;
                 bool palindrome;
+
                 if (len & 1) {
                     int center = (l + r) / 2;
                     palindrome = odd[center] >= len / 2 + 1;
@@ -47,6 +52,7 @@ public:
                     int center = (l + r + 1) / 2;
                     palindrome = even[center] >= len / 2;
                 }
+
                 if (len >= k && palindrome)
                     dp[r + 1] = max(dp[r + 1], dp[l] + 1);
             }
