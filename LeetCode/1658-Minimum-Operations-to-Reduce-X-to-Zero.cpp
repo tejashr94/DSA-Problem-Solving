@@ -3,7 +3,7 @@ using namespace std;
 
 // LeetCode 1658: Minimum Operations to Reduce X to Zero
 // Approach 1: Sliding Window
-// Find the longest subarray with sum = totalSum - x.
+// Keep the longest subarray with sum = totalSum - x.
 // Answer = n - longest subarray length.
 // Time: O(n), Space: O(1)
 
@@ -11,9 +11,10 @@ class Solution {
 public:
     int minOperations(vector<int>& nums, int x) {
         int n = nums.size();
-
         long long total = 0;
-        for (int num : nums) total += num;
+
+        for (int num : nums)
+            total += num;
 
         long long target = total - x;
 
@@ -21,7 +22,8 @@ public:
         if (target < 0) return -1;
 
         long long sum = 0;
-        int left = 0, maxLen = -1;
+        int left = 0;
+        int maxLen = -1;
 
         for (int right = 0; right < n; right++) {
             sum += nums[right];
@@ -40,12 +42,19 @@ public:
 };
 
 /*
-Approach 2: Prefix/Suffix Combination
-A direct alternative is to enumerate how many elements are removed
-from the left and use a two-pointer/prefix-sum search for the right side.
-With positive nums, this can also be implemented in O(n).
+Approach 2: Prefix/Suffix Enumeration
+Use prefix sums from the left and suffix sums from the right.
+Try every valid number of removals from one side and find the
+matching amount needed from the other side.
 
+Time: O(n), Space: O(n).
+*/
+
+/*
 Approach 3: Prefix Sum + Hash Map
-Store prefix sums and search for a complementary sum corresponding
-to the removable boundary. This works in O(n) time and O(n) space.
+Transform the problem into finding the longest subarray with
+sum = totalSum - x. Store prefix sums in a hash map and look
+for the required complementary prefix sum.
+
+Time: O(n), Space: O(n).
 */
