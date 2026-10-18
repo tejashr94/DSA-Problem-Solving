@@ -1,5 +1,5 @@
 // LeetCode 1569: Number of Ways to Reorder Array to Get Same BST
-// Approach: Recursion + Combinatorics (Pascal's Triangle)
+// Approach 1: Recursive split + Pascal's triangle combinations
 // Time: O(n^2), Space: O(n^2)
 
 class Solution {
@@ -15,10 +15,8 @@ public:
         vector<int> left, right;
 
         for (int i = 1; i < n; ++i) {
-            if (nums[i] < root)
-                left.push_back(nums[i]);
-            else
-                right.push_back(nums[i]);
+            if (nums[i] < root) left.push_back(nums[i]);
+            else right.push_back(nums[i]);
         }
 
         long long ways = comb[n - 1][left.size()];
@@ -33,13 +31,10 @@ public:
 
         for (int i = 0; i <= n; ++i) {
             comb[i][0] = comb[i][i] = 1;
-            for (int j = 1; j < i; ++j) {
-                comb[i][j] =
-                    (comb[i - 1][j - 1] + comb[i - 1][j]) % MOD;
-            }
+            for (int j = 1; j < i; ++j)
+                comb[i][j] = (comb[i - 1][j - 1] + comb[i - 1][j]) % MOD;
         }
 
-        // Exclude the original ordering.
         return (dfs(nums) - 1 + MOD) % MOD;
     }
 };
