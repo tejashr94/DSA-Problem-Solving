@@ -9,6 +9,7 @@ public:
         for (int i = 0; i < arr1.size(); i++) {
             bool isValid = true;
 
+            // arr1[i] must be farther than d from every element in arr2.
             for (int j = 0; j < arr2.size(); j++) {
                 if (abs(arr1[i] - arr2[j]) <= d) {
                     isValid = false;
